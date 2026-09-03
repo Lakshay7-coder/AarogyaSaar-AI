@@ -1,0 +1,97 @@
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes orbit {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes orbPulse {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.06);
+  }
+}
+
+@keyframes orbProcess {
+  0%,
+  100% {
+    transform: scale(1) rotate(0deg);
+  }
+
+  50% {
+    transform: scale(1.04) rotate(3deg);
+  }
+}
+
+@keyframes waveform {
+  from {
+    height: 6px;
+  }
+
+  to {
+    height: 25px;
+  }
+}
+
+@keyframes recordingPulse {
+  0% {
+    box-shadow:
+      0 0 0 0
+      rgba(199, 74, 74, 0.35);
+  }
+
+  70% {
+    box-shadow:
+      0 0 0 12px
+      rgba(199, 74, 74, 0);
+  }
+
+  100% {
+    box-shadow:
+      0 0 0 0
+      rgba(199, 74, 74, 0);
+  }
+}
+
+@keyframes floatCard {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+.spin {
+  animation: spin 0.8s linear infinite;
+}
+
+button,
+a,
+input,
+textarea,
+select,
+.dashboard-card,
+.doctor-case-card,
+.document-card {
+  transition:
+    background-color 180ms ease,
+    border-color 180ms ease,
+    box-shadow 180ms ease,
+    transform 180ms ease;
+}
