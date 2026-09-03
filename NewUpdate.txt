@@ -1,0 +1,92 @@
+## Project Improvement Summary
+
+### Priority 1: Product Correctness
+
+Implemented:
+
+- Added protected routes for authenticated users.
+- Added role-based access for patients and doctors.
+- Prevented patients from opening doctor routes.
+- Enforced consent before accessing patient workspace pages.
+- Added consent timestamp persistence.
+- Preserved registration data including:
+  - Age
+  - Gender
+  - Phone number
+- Fixed doctor case details so each URL case ID displays the correct patient.
+- Added fallback redirect for invalid case IDs.
+- Improved logout by removing `aarogya_token`.
+- Added safe handling for corrupted `localStorage` user data.
+
+### Priority 2: UI/UX
+
+Implemented:
+
+- Added selectable themes:
+  - Clinical teal
+  - Ocean blue
+  - Botanical green
+  - Warm amber
+  - High contrast
+- Persisted the selected theme between sessions.
+- Added bundled Manrope font for consistent typography.
+- Added keyboard focus styles for buttons, links, inputs, and selects.
+- Improved mobile navigation with bottom navigation on small screens.
+- Added functional doctor case search.
+- Added priority filtering for High, Medium, and Low cases.
+- Added empty search-result states.
+- Added real file picker support for documents.
+- Added document file-size validation.
+- Added upload processing state and visible errors.
+- Added cleanup for pending upload processing.
+- Improved semantic colors for case statuses and priorities.
+- Reduced excessive dashboard card rounding and shadows.
+- Added a subtle clinical grid background texture.
+- Added AI-generated content labeling.
+- Fixed mobile overflow at 320px width.
+- Tested responsive layouts at:
+  - 320px
+  - 375px
+  - 768px tablet
+  - 1440px desktop
+
+### Priority 3: Reliability and Security
+
+Implemented:
+
+- Removed medical profile data from `localStorage`.
+- Kept case data in memory instead of casually persisting medical information.
+- Isolated case state by authenticated user and case ID.
+- Fixed functional state updates for:
+  - Symptoms
+  - Timeline events
+  - Documents
+  - Completeness percentage
+- Added API error normalization.
+- Added support for cancellable requests using `AbortController`.
+- Added safe user-facing API error messages.
+- Added cleanup for pending document processing when components unmount.
+
+### Automated Tests
+
+Added Vitest and Testing Library configuration.
+
+Created tests covering:
+
+- Malformed authentication data
+- Logout token cleanup
+- Medical data persistence rules
+- Consent enforcement
+- Role-based authorization
+- Case routing by ID
+- User case isolation
+- Upload validation
+- API cancellation helpers
+- API error handling
+
+Current result:
+
+- **4 test files passed**
+- **9 tests passed**
+- Production build passed
+- Lint passed with only Fast Refresh warnings
