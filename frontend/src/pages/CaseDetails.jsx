@@ -7,7 +7,11 @@ import {
   CheckCircle2
 } from "lucide-react";
 
-import { useNavigate } from "react-router-dom";
+import {
+  Navigate,
+  useNavigate,
+  useParams
+} from "react-router-dom";
 
 import Navbar from "../components/common/Navbar";
 import Sidebar from "../components/common/Sidebar";
@@ -19,10 +23,50 @@ import RedFlagAlert from "../components/ai/RedFlagAlert";
 import DoctorReview from "../components/doctor/DoctorReview";
 
 import { useCase } from "../context/CaseContext";
+import { demoPatients } from "../data/demoData";
+
+export function getDemoCaseForId(caseData, id) {
+  const selectedPatient = demoPatients.find(
+    (patient) => patient.id === id
+  );
+
+  if (!selectedPatient) return null;
+
+  return {
+    ...caseData,
+    id: selectedPatient.id,
+    status:
+      caseData.id === id
+        ? caseData.status
+        : selectedPatient.status,
+    patient: {
+      ...caseData.patient,
+      name: selectedPatient.name,
+      age: selectedPatient.age,
+      gender: selectedPatient.gender
+    },
+    symptoms:
+      caseData.id === id
+        ? caseData.symptoms
+        : [
+            {
+              name: selectedPatient.complaint,
+              severity: "Review required",
+              duration: "Not provided"
+            }
+          ]
+  };
+}
 
 function CaseDetails() {
   const navigate = useNavigate();
+  const { id } = useParams();
   const { caseData, updateCase } = useCase();
+  const selectedCase = getDemoCaseForId(caseData, id);
+
+  if (!selectedCase) {
+    return <Navigate to="/doctor/cases" replace />;
+  }
 
   const verifyCase = () => {
     updateCase({
@@ -52,7 +96,7 @@ function CaseDetails() {
             </button>
 
             <div className="case-id-label">
-              {caseData.id}
+              {selectedCase.id}
             </div>
           </div>
 
@@ -63,7 +107,7 @@ function CaseDetails() {
               </span>
 
               <h1>
-                {caseData.patient.name}
+                {selectedCase.patient.name}
               </h1>
 
               <p>
@@ -75,12 +119,12 @@ function CaseDetails() {
             <div className="verification-status">
               <span className="status-dot" />
 
-              {caseData.status}
+              {selectedCase.status}
             </div>
           </div>
 
           <PatientCard
-            patient={caseData.patient}
+            patient={selectedCase.patient}
           />
 
           <div className="doctor-case-layout">
@@ -96,7 +140,7 @@ function CaseDetails() {
                 </div>
 
                 <div className="symptoms-grid">
-                  {caseData.symptoms.map(
+                  {selectedCase.symptoms.map(
                     (symptom, index) => (
                       <SymptomChip
                         key={index}

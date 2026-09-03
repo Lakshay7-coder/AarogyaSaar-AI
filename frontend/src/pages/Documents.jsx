@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import {
   UploadCloud,
@@ -15,30 +15,57 @@ import DocumentCard from "../components/patient/DocumentCard";
 
 import { useCase } from "../context/CaseContext";
 
+export function validateDocumentFile(file) {
+  if (!file) return "Choose a document to upload.";
+  if (file.size > 10 * 1024 * 1024) {
+    return "Choose a file smaller than 10 MB.";
+  }
+
+  return "";
+}
+
 function Documents() {
   const navigate = useNavigate();
   const { caseData, updateCase } = useCase();
 
   const [uploading, setUploading] =
     useState(false);
+  const [uploadError, setUploadError] = useState("");
+  const fileInputRef = useRef(null);
+  const uploadTimeoutRef = useRef(null);
 
-  const handleUpload = () => {
+  useEffect(() => {
+    return () => clearTimeout(uploadTimeoutRef.current);
+  }, []);
+
+  const handleUpload = (event) => {
+    event?.stopPropagation();
+    const file = event?.target?.files?.[0];
+
+    const validationError = validateDocumentFile(file);
+    if (validationError) {
+      setUploadError(validationError);
+      return;
+    }
+
+    setUploadError("");
     setUploading(true);
 
-    setTimeout(() => {
+    uploadTimeoutRef.current = setTimeout(() => {
       setUploading(false);
 
-      updateCase({
+      updateCase((previous) => ({
         documents: [
-          ...caseData.documents,
+          ...previous.documents,
           {
             id: Date.now(),
-            name: "Medical_Report.pdf",
-            type: "PDF",
+            name: file.name,
+            type: file.type.split("/")[1]?.toUpperCase() || "FILE",
             status: "Processed"
           }
         ]
-      });
+      }));
+      event.target.value = "";
     }, 1400);
   };
 
@@ -78,8 +105,15 @@ function Documents() {
 
           <div
             className="upload-zone"
-            onClick={handleUpload}
+            onClick={() => fileInputRef.current?.click()}
           >
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="application/pdf,image/jpeg,image/png"
+              onChange={handleUpload}
+              hidden
+            />
             <div className="upload-icon">
               <UploadCloud size={26} />
             </div>
@@ -95,9 +129,22 @@ function Documents() {
               extraction
             </p>
 
-            <button className="secondary-btn">
+            <button
+              className="secondary-btn"
+              type="button"
+              disabled={uploading}
+              onClick={(event) => {
+                event.stopPropagation();
+                fileInputRef.current?.click();
+              }}
+            >
               Choose File
             </button>
+            {uploadError && (
+              <p className="form-error" role="alert">
+                {uploadError}
+              </p>
+            )}
           </div>
 
           <div className="documents-header">

@@ -6,12 +6,30 @@ export function AuthProvider({ children }) {
   const [user, setUser] = useState(() => {
     const savedUser = localStorage.getItem("aarogya_user");
 
-    return savedUser ? JSON.parse(savedUser) : null;
+    if (!savedUser) return null;
+
+    try {
+      return JSON.parse(savedUser);
+    } catch {
+      localStorage.removeItem("aarogya_user");
+      return null;
+    }
   });
 
   useEffect(() => {
     if (user) {
-      localStorage.setItem("aarogya_user", JSON.stringify(user));
+      const persistedSession = {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+        consentAt: user.consentAt
+      };
+
+      localStorage.setItem(
+        "aarogya_user",
+        JSON.stringify(persistedSession)
+      );
     } else {
       localStorage.removeItem("aarogya_user");
     }
@@ -22,7 +40,11 @@ export function AuthProvider({ children }) {
       id: userData.id || "demo-user-01",
       name: userData.name || "Amit Sharma",
       email: userData.email || "amit@example.com",
-      role: userData.role || "patient"
+      role: userData.role || "patient",
+      age: userData.age || "",
+      gender: userData.gender || "",
+      phone: userData.phone || "",
+      consentAt: userData.consentAt || null
     };
 
     setUser(loggedUser);
@@ -30,8 +52,15 @@ export function AuthProvider({ children }) {
     return loggedUser;
   };
 
+  const updateUser = (updates) => {
+    setUser((previous) =>
+      previous ? { ...previous, ...updates } : previous
+    );
+  };
+
   const logout = () => {
     setUser(null);
+    localStorage.removeItem("aarogya_token");
   };
 
   const isAuthenticated = !!user;
@@ -41,6 +70,7 @@ export function AuthProvider({ children }) {
       value={{
         user,
         login,
+        updateUser,
         logout,
         isAuthenticated
       }}

@@ -26,6 +26,9 @@ function Register() {
 
     login({
       name: form.name,
+      age: form.age,
+      gender: form.gender,
+      phone: form.phone,
       email: `${form.name
         .toLowerCase()
         .replaceAll(" ", ".")}@demo.com`,

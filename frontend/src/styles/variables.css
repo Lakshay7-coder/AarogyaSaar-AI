@@ -35,3 +35,39 @@
   --transition:
     180ms cubic-bezier(0.2, 0.8, 0.2, 1);
 }
+
+[data-theme="ocean"] {
+  --primary: #245b8f;
+  --primary-dark: #173e65;
+  --primary-light: #e8f1fb;
+  --accent: #3b9fc2;
+  --bg: #f3f7fb;
+}
+
+[data-theme="botanical"] {
+  --primary: #2d6a55;
+  --primary-dark: #20513f;
+  --primary-light: #eaf5ef;
+  --accent: #6caa78;
+  --bg: #f4f8f5;
+}
+
+[data-theme="warm"] {
+  --primary: #9a5a27;
+  --primary-dark: #713d19;
+  --primary-light: #fff3e5;
+  --accent: #d39a45;
+  --bg: #fcf8f2;
+}
+
+[data-theme="contrast"] {
+  --primary: #004f69;
+  --primary-dark: #003244;
+  --primary-light: #dff3fa;
+  --accent: #007d63;
+  --text: #111820;
+  --text-soft: #3e4b55;
+  --text-muted: #56636c;
+  --bg: #f1f4f5;
+  --border: #aab8bf;
+}

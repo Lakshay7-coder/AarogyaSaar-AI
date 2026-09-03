@@ -91,12 +91,12 @@ function CaseTaking() {
       });
     }
 
-    updateCase({
+    updateCase((previous) => ({
       completeness: Math.min(
-        caseData.completeness + 4,
+        previous.completeness + 4,
         100
       )
-    });
+    }));
 
     setInput("");
   };

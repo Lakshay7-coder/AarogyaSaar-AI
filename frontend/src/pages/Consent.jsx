@@ -5,10 +5,21 @@ import {
   ArrowRight
 } from "lucide-react";
 
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
 function Consent() {
   const navigate = useNavigate();
+  const { updateUser } = useAuth();
+  const [consented, setConsented] = useState(false);
+
+  const handleContinue = () => {
+    if (!consented) return;
+
+    updateUser({ consentAt: new Date().toISOString() });
+    navigate("/patient/dashboard");
+  };
 
   return (
     <div className="consent-page">
@@ -82,7 +93,14 @@ function Consent() {
         </div>
 
         <label className="consent-checkbox">
-          <input type="checkbox" id="consent" />
+          <input
+            type="checkbox"
+            id="consent"
+            checked={consented}
+            onChange={(event) =>
+              setConsented(event.target.checked)
+            }
+          />
 
           <span>
             I understand and consent to AI-assisted
@@ -93,9 +111,8 @@ function Consent() {
 
         <button
           className="hero-primary full-width"
-          onClick={() =>
-            navigate("/patient/dashboard")
-          }
+          onClick={handleContinue}
+          disabled={!consented}
         >
           I Understand & Continue
           <ArrowRight size={18} />

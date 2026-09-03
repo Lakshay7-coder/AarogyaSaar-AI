@@ -9,14 +9,13 @@ html {
 }
 
 body {
-  font-family:
-    Inter,
-    Manrope,
-    "Plus Jakarta Sans",
-    Arial,
-    sans-serif;
+  font-family: "Manrope Variable", Manrope, sans-serif;
 
-  background: var(--bg);
+  background-color: var(--bg);
+  background-image:
+    linear-gradient(rgba(23, 107, 135, 0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(23, 107, 135, 0.025) 1px, transparent 1px);
+  background-size: 32px 32px;
   color: var(--text);
 
   -webkit-font-smoothing: antialiased;
@@ -32,6 +31,15 @@ select {
 button {
   border: 0;
   cursor: pointer;
+}
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 3px;
 }
 
 button:disabled {
@@ -131,21 +139,15 @@ a {
 
 .navbar {
   height: var(--navbar-height);
-
   padding: 0 28px;
-
   background: rgba(255, 255, 255, 0.94);
-
   border-bottom: 1px solid var(--border);
-
   display: flex;
   align-items: center;
   justify-content: space-between;
-
   position: sticky;
   top: 0;
   z-index: 50;
-
   backdrop-filter: blur(16px);
 }
 
@@ -375,11 +377,11 @@ a {
 
   border: 1px solid var(--border);
 
-  border-radius: var(--radius);
+  border-radius: 12px;
 
   padding: 25px;
 
-  box-shadow: var(--shadow-sm);
+  box-shadow: none;
 }
 
 .card-heading {
@@ -2880,25 +2882,25 @@ a {
 
   background: #edf3f5;
 
-  color: var(--text-soft);
+  color: #3e4b55;
 
-  font-size: 8px;
+  font-size: 9px;
   font-weight: 800;
 }
 
 .status-pill.awaiting-review {
-  color: var(--warning);
-  background: #fff4dc;
+  color: #854900;
+  background: #fff0d1;
 }
 
 .status-pill.ai-processing {
-  color: var(--primary);
-  background: var(--primary-light);
+  color: #14537d;
+  background: #e2f0fb;
 }
 
 .status-pill.verified {
-  color: var(--success);
-  background: #e8f6ef;
+  color: #146c48;
+  background: #dff3e8;
 }
 
 .case-status small {
@@ -3564,4 +3566,80 @@ a {
 
 .modal-body {
   padding: 20px;
+}
+
+.theme-control {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  color: var(--text-soft);
+  font-size: 12px;
+}
+
+.theme-control select {
+  max-width: 132px;
+  padding: 8px 26px 8px 9px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--text);
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.filter-select {
+  min-height: 42px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 12px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--surface);
+  color: var(--text-soft);
+}
+
+.filter-select select {
+  border: 0;
+  background: transparent;
+  color: var(--text);
+}
+
+.empty-state {
+  padding: 42px 20px;
+  border: 1px dashed var(--border);
+  border-radius: var(--radius);
+  color: var(--text-soft);
+  text-align: center;
+}
+
+.empty-state p {
+  margin-top: 7px;
+  font-size: 13px;
+}
+
+.form-error {
+  margin-top: 10px;
+  color: var(--danger);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.ai-review-label {
+  display: block;
+  margin-top: 3px;
+  color: var(--text-muted);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.2px;
 }
