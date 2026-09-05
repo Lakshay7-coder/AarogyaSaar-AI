@@ -15,10 +15,6 @@ function AIInsight({
           {title}
         </div>
 
-        <span className="ai-review-label">
-          AI-generated · review before action
-        </span>
-
         <p>{children}</p>
       </div>
     </div>

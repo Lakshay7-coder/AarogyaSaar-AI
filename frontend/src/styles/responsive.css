@@ -115,14 +115,6 @@
     display: none;
   }
 
-  .theme-control > span {
-    display: none;
-  }
-
-  .theme-control select {
-    max-width: 112px;
-  }
-
   .landing-nav {
     padding: 0 18px;
   }
@@ -283,48 +275,12 @@
 }
 
 @media (max-width: 450px) {
-  .hero,
-  .hero-visual {
-    overflow: hidden;
-  }
-
   .sidebar {
-    width: 100%;
-    height: 66px;
-    min-height: 66px;
-    padding: 7px 8px;
-    bottom: 0;
-    top: auto;
-    z-index: 40;
-    border-right: 0;
-    border-top: 1px solid var(--border);
-    flex-direction: row;
-  }
-
-  .sidebar-top,
-  .sidebar-top nav,
-  .sidebar-bottom {
-    display: flex;
-    flex: 1;
-  }
-
-  .sidebar-top nav {
-    justify-content: space-around;
-  }
-
-  .sidebar-link {
-    flex: 1;
-    min-height: 48px;
-    margin: 0 2px;
-  }
-
-  .sidebar-bottom {
     display: none;
   }
 
   .app-body {
     display: block;
-    padding-bottom: 66px;
   }
 
   .dashboard-main,
@@ -359,32 +315,5 @@
 
   .floating-card-three {
     left: -20px;
-  }
-}
-
-@media (max-width: 360px) {
-  .navbar {
-    padding: 0 10px;
-  }
-
-  .navbar .brand strong {
-    font-size: 14px;
-  }
-
-  .navbar .brand-icon {
-    width: 34px;
-    height: 34px;
-  }
-
-  .theme-control select {
-    max-width: 96px;
-    font-size: 11px;
-  }
-
-  .dashboard-main,
-  .doctor-main,
-  .case-details-main {
-    padding-left: 12px;
-    padding-right: 12px;
   }
 }

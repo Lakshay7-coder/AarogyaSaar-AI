@@ -31,7 +31,7 @@ function PatientTimeline({ events = [] }) {
           </div>
 
           <div className="timeline-content">
-            <span>{event.date}</span>
+            <span>{event.date ? new Date(event.date).toLocaleString() : "Recent"}</span>
             <h4>{event.title}</h4>
             <p>{event.description}</p>
           </div>

@@ -1,97 +1,19 @@
-import {
-  LayoutDashboard,
-  MessageSquareHeart,
-  FileText,
-  Clock3,
-  Users,
-  Settings
-} from "lucide-react";
-
+import { LayoutDashboard, MessageCircleHeart, FileText, Clock3, ClipboardCheck } from "lucide-react";
 import { NavLink } from "react-router-dom";
-import { useAuth } from "../../context/AuthContext";
+import { getRememberedCaseId } from "../../context/CaseContext";
 
-function Sidebar() {
-  const { user } = useAuth();
-
+export default function Sidebar({ doctor = false }) {
+  const id = getRememberedCaseId();
   const patientLinks = [
-    {
-      to: "/patient/dashboard",
-      label: "Dashboard",
-      icon: LayoutDashboard
-    },
-    {
-      to: "/patient/case",
-      label: "AI Case Taking",
-      icon: MessageSquareHeart
-    },
-    {
-      to: "/patient/documents",
-      label: "Documents",
-      icon: FileText
-    },
-    {
-      to: "/patient/timeline",
-      label: "Medical Timeline",
-      icon: Clock3
-    }
+    { to: "/patient/dashboard", label: "Overview", icon: LayoutDashboard },
+    { to: id ? `/case/${id}` : "/patient/dashboard", label: "AI History", icon: MessageCircleHeart },
+    { to: id ? `/case/${id}/documents` : "/patient/dashboard", label: "Documents", icon: FileText },
+    { to: id ? `/case/${id}/timeline` : "/patient/dashboard", label: "Medical Timeline", icon: Clock3 },
+    { to: id ? `/case/${id}/summary` : "/patient/dashboard", label: "Clinical Summary", icon: ClipboardCheck }
   ];
-
   const doctorLinks = [
-    {
-      to: "/doctor/dashboard",
-      label: "Dashboard",
-      icon: LayoutDashboard
-    },
-    {
-      to: "/doctor/cases",
-      label: "Patient Cases",
-      icon: Users
-    }
+    { to: "/doctor", label: "Dashboard", icon: LayoutDashboard },
+    { to: "/doctor/cases", label: "Patient Cases", icon: ClipboardCheck }
   ];
-
-  const links =
-    user?.role === "doctor" ? doctorLinks : patientLinks;
-
-  return (
-    <aside className="sidebar">
-      <div className="sidebar-top">
-        <div className="sidebar-label">
-          WORKSPACE
-        </div>
-
-        <nav>
-          {links.map((item) => {
-            const Icon = item.icon;
-
-            return (
-              <NavLink
-                key={item.to}
-                to={item.to}
-                className={({ isActive }) =>
-                  `sidebar-link ${
-                    isActive ? "active" : ""
-                  }`
-                }
-              >
-                <Icon size={19} />
-                <span>{item.label}</span>
-              </NavLink>
-            );
-          })}
-        </nav>
-      </div>
-
-      <div className="sidebar-bottom">
-        <NavLink
-          to="/"
-          className="sidebar-link"
-        >
-          <Settings size={19} />
-          <span>Help & Settings</span>
-        </NavLink>
-      </div>
-    </aside>
-  );
+  return <aside className="sidebar"><div><div className="sidebar-title">{doctor ? "Doctor Workspace" : "Patient Workspace"}</div><nav>{(doctor?doctorLinks:patientLinks).map(({to,label,icon:Icon})=><NavLink key={label} to={to} className={({isActive})=>isActive?"side-link active":"side-link"}><Icon size={19}/><span>{label}</span></NavLink>)}</nav></div><div className="sidebar-ai"><div className="ai-pulse">✦</div><strong>AI Assistant</strong><p>Your case intelligence engine is active.</p><div className="mini-status"><span/>Processing ready</div></div></aside>;
 }
-
-export default Sidebar;

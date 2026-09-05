@@ -1,89 +1,95 @@
-import {
-  createContext,
-  useContext,
-  useState
-} from "react";
-import { demoCase } from "../data/demoData";
-import { useAuth } from "./AuthContext";
+import { createContext, useContext, useState } from "react";
+import api from "../services/api";
 
-const CaseContext = createContext();
+const CaseContext = createContext(null);
+const CASE_KEY = "aarogyasaar_case_id";
 
-export function CaseProvider({ children }) {
-  const { user } = useAuth();
-  const [casesByUser, setCasesByUser] = useState({});
-  const [activeCaseId, setActiveCaseId] = useState(demoCase.id);
-  const userId = user?.id;
+export const CaseProvider = ({ children }) => {
+  const [currentCase, setCurrentCase] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
-  const createUserCase = (profile) => ({
-    ...demoCase,
-    patient: {
-      ...demoCase.patient,
-      name: profile?.name || demoCase.patient.name,
-      age: profile?.age || demoCase.patient.age,
-      gender: profile?.gender || demoCase.patient.gender,
-      phone: profile?.phone || demoCase.patient.phone
-    },
-    symptoms: [...demoCase.symptoms],
-    timeline: [...demoCase.timeline],
-    documents: [...demoCase.documents]
-  });
-
-  const caseData =
-    casesByUser[userId]?.[activeCaseId] || createUserCase(user);
-
-  const updateCase = (updates) => {
-    if (!userId) return;
-
-    setCasesByUser((previousCases) => {
-      const previous =
-        previousCases[userId]?.[activeCaseId] || createUserCase(user);
-      const resolvedUpdates =
-        typeof updates === "function"
-          ? updates(previous)
-          : updates;
-
-      return {
-        ...previousCases,
-        [userId]: {
-          ...(previousCases[userId] || {}),
-          [activeCaseId]: {
-            ...previous,
-            ...resolvedUpdates
-          }
-        }
-      };
-    });
+  const rememberCase = (caseData) => {
+    if (caseData?._id) localStorage.setItem(CASE_KEY, caseData._id);
+    setCurrentCase(caseData);
+    return caseData;
   };
 
-  const addSymptom = (symptom) => {
-    updateCase((previous) => ({
-      symptoms: [...previous.symptoms, symptom]
-    }));
+  const createCase = async () => {
+    setLoading(true); setError("");
+    try { return rememberCase((await api.post("/cases")).data); }
+    catch (err) { setError(err.response?.data?.message || "Unable to create case"); throw err; }
+    finally { setLoading(false); }
   };
 
-  const addTimelineEvent = (event) => {
-    updateCase((previous) => ({
-      timeline: [...previous.timeline, event]
-    }));
+  const giveConsent = async (caseId) => {
+    const data = (await api.post(`/cases/${caseId}/consent`)).data;
+    return rememberCase(data.case || data);
+  };
+
+  const savePatientInfo = async (caseId, data) => {
+    const result = (await api.put(`/cases/${caseId}/patient-info`, data)).data;
+    return rememberCase(result);
+  };
+
+  const sendResponse = async (caseId, text, language = "en") => {
+    setLoading(true); setError("");
+    try {
+      const result = (await api.post(`/cases/${caseId}/respond`, { text, language })).data;
+      rememberCase(result.case);
+      return result;
+    } catch (err) {
+      setError(err.response?.data?.message || "AI response failed");
+      throw err;
+    } finally { setLoading(false); }
+  };
+
+  const generateSummary = async (caseId) => {
+    const result = (await api.post(`/cases/${caseId}/summary`)).data;
+    rememberCase(result.case);
+    return result;
+  };
+
+  const getCase = async (caseId) => {
+    setLoading(true); setError("");
+    try { return rememberCase((await api.get(`/cases/${caseId}`)).data); }
+    catch (err) { setError(err.response?.data?.message || "Unable to load case"); throw err; }
+    finally { setLoading(false); }
+  };
+
+  const getMyCases = async () => (await api.get("/cases/my")).data;
+
+  const uploadDocument = async (caseId, file) => {
+    const formData = new FormData();
+    formData.append("document", file);
+    const result = (await api.post(`/documents/${caseId}/upload`, formData)).data;
+    if (result.case) rememberCase(result.case);
+    return result;
+  };
+
+  const verifyCase = async (caseId, doctorSummary = "") => {
+    const result = (await api.put(`/doctor/cases/${caseId}/verify`, { doctorSummary })).data;
+    if (result.case) rememberCase(result.case);
+    return result;
+  };
+
+  const updateDoctorSummary = async (caseId, doctorSummary) => {
+    const result = (await api.put(`/doctor/cases/${caseId}/summary`, { doctorSummary })).data;
+    if (result.case) rememberCase(result.case);
+    return result;
   };
 
   return (
-    <CaseContext.Provider
-      value={{
-        caseData,
-        setCaseData: updateCase,
-        activeCaseId,
-        selectCase: setActiveCaseId,
-        updateCase,
-        addSymptom,
-        addTimelineEvent
-      }}
-    >
+    <CaseContext.Provider value={{
+      currentCase, setCurrentCase, loading, error,
+      createCase, giveConsent, savePatientInfo, sendResponse,
+      generateSummary, getCase, getMyCases, uploadDocument,
+      verifyCase, updateDoctorSummary
+    }}>
       {children}
     </CaseContext.Provider>
   );
-}
+};
 
-export function useCase() {
-  return useContext(CaseContext);
-}
+export const useCase = () => useContext(CaseContext);
+export const getRememberedCaseId = () => localStorage.getItem(CASE_KEY);
