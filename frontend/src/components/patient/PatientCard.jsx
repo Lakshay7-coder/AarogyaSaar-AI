@@ -1,0 +1,2 @@
+import { UserRound } from "lucide-react";
+export default function PatientCard({patient={}}){return <div className="patient-card"><div className="patient-avatar"><UserRound size={24}/></div><div className="patient-card-info"><span>Patient</span><h3>{patient.name||"Unknown"}</h3><p>{patient.age?`${patient.age} years`:"Age not provided"}{patient.gender?` · ${patient.gender}`:""}</p></div><div className="patient-id"><span>Case ID</span><strong>{patient.caseId||"—"}</strong></div></div>}

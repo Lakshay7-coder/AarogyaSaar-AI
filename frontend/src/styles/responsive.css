@@ -1,0 +1,319 @@
+@media (max-width: 1100px) {
+  .hero {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+
+  .hero-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .hero-visual {
+    min-height: 450px;
+  }
+
+  .landing-trust {
+    display: none;
+  }
+
+  .stats-grid {
+    grid-template-columns:
+      1fr 1fr;
+  }
+
+  .doctor-content-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .doctor-side-panel {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+
+  .doctor-principle-card {
+    margin-top: 0;
+  }
+
+  .case-taking-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .case-intelligence {
+    position: static;
+  }
+
+  .doctor-case-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .clinical-ai-panel {
+    position: static;
+  }
+}
+
+@media (max-width: 850px) {
+  .sidebar {
+    width: 68px;
+    padding: 20px 8px;
+  }
+
+  .sidebar-link {
+    justify-content: center;
+    padding: 0;
+  }
+
+  .sidebar-link span,
+  .sidebar-label {
+    display: none;
+  }
+
+  .dashboard-main,
+  .doctor-main,
+  .case-details-main {
+    padding: 28px 20px;
+  }
+
+  .dashboard-grid,
+  .timeline-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .auth-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .auth-brand-panel {
+    display: none;
+  }
+
+  .auth-form-panel {
+    min-height: 100vh;
+  }
+
+  .doctor-case-card {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .open-case-btn {
+    justify-content: center;
+  }
+}
+
+@media (max-width: 650px) {
+  :root {
+    --navbar-height: 64px;
+  }
+
+  .navbar {
+    padding: 0 15px;
+  }
+
+  .navbar .language-btn {
+    display: none;
+  }
+
+  .landing-nav {
+    padding: 0 18px;
+  }
+
+  .landing-nav-actions {
+    gap: 8px;
+  }
+
+  .nav-primary {
+    padding: 10px 12px;
+  }
+
+  .hero {
+    padding: 40px 20px;
+  }
+
+  .hero h1 {
+    font-size: 45px;
+    letter-spacing: -2.5px;
+  }
+
+  .hero-description {
+    font-size: 12px;
+  }
+
+  .hero-actions {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .hero-primary,
+  .hero-secondary {
+    width: 100%;
+  }
+
+  .hero-features {
+    justify-content: center;
+  }
+
+  .hero-visual {
+    min-height: 360px;
+  }
+
+  .ai-orb-wrapper {
+    transform: scale(0.75);
+  }
+
+  .floating-card-one {
+    left: -10px;
+  }
+
+  .floating-card-two {
+    right: -10px;
+  }
+
+  .floating-card-three {
+    left: 0;
+    bottom: 25px;
+  }
+
+  .page-heading,
+  .doctor-heading,
+  .case-details-heading {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 18px;
+  }
+
+  .page-heading h1,
+  .doctor-heading h1 {
+    font-size: 27px;
+  }
+
+  .patient-card {
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+
+  .patient-id {
+    width: 100%;
+    align-items: flex-start;
+  }
+
+  .bottom-grid {
+    margin-bottom: 0;
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .registration-form {
+    padding: 20px;
+  }
+
+  .registration-header h1,
+  .consent-container h1 {
+    font-size: 38px;
+  }
+
+  .case-progress {
+    overflow-x: auto;
+    padding-bottom: 8px;
+  }
+
+  .case-step {
+    min-width: 110px;
+  }
+
+  .conversation-header {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .conversation-header h1 {
+    font-size: 19px;
+  }
+
+  .case-taking-main {
+    padding: 20px 12px;
+  }
+
+  .case-intelligence {
+    padding: 16px;
+  }
+
+  .stats-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .stat-card {
+    padding: 13px;
+  }
+
+  .stat-content strong {
+    font-size: 19px;
+  }
+
+  .doctor-side-panel {
+    grid-template-columns: 1fr;
+  }
+
+  .doctor-case-card {
+    grid-template-columns: 1fr;
+  }
+
+  .case-filters {
+    flex-direction: column;
+  }
+
+  .symptoms-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .landing-nav .brand strong {
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 450px) {
+  .sidebar {
+    display: none;
+  }
+
+  .app-body {
+    display: block;
+  }
+
+  .dashboard-main,
+  .doctor-main,
+  .case-details-main {
+    padding: 22px 15px;
+  }
+
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .hero h1 {
+    font-size: 39px;
+  }
+
+  .hero-visual {
+    min-height: 320px;
+  }
+
+  .floating-card {
+    transform: scale(0.85);
+  }
+
+  .floating-card-one {
+    left: -35px;
+  }
+
+  .floating-card-two {
+    right: -35px;
+  }
+
+  .floating-card-three {
+    left: -20px;
+  }
+}

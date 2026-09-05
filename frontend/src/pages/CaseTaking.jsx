@@ -1,0 +1,20 @@
+import { useEffect, useState } from "react";
+import { Mic, Send, Volume2, ArrowLeft, FileText, Clock3, CheckCircle2 } from "lucide-react";
+import { useNavigate, useParams } from "react-router-dom";
+import { useCase } from "../context/CaseContext";
+import { useVoice } from "../hooks/useVoice";
+import RedFlagCard from "../components/ai/RedFlagCard";
+import AdaptiveQuestion from "../components/ai/AdaptiveQuestion";
+import CompletenessMeter from "../components/ai/CompletenessMeter";
+
+const FALLBACK_QUESTION = "Please describe the main health problem you are experiencing.";
+export default function CaseTaking(){
+ const {caseId}=useParams(); const navigate=useNavigate(); const {currentCase,getCase,sendResponse,generateSummary,loading,error}=useCase(); const [message,setMessage]=useState(""); const [language,setLanguage]=useState("en-IN"); const [localError,setLocalError]=useState("");
+ const {listening,transcript,startListening,stopListening,speak}=useVoice({language});
+ useEffect(()=>{getCase(caseId).catch(()=>{});},[caseId]); useEffect(()=>{if(transcript)setMessage(transcript)},[transcript]);
+ const question=currentCase?.adaptiveQuestions?.at(-1)||FALLBACK_QUESTION;
+ const submit=async()=>{if(!message.trim()||loading)return;setLocalError("");try{const result=await sendResponse(caseId,message.trim(),language.replace("-IN",""));setMessage("");if(result.extracted?.nextQuestion)speak(result.extracted.nextQuestion)}catch(e){setLocalError(e.response?.data?.message||"Could not save your response.")}};
+ const finish=async()=>{try{await generateSummary(caseId);navigate(`/case/${caseId}/summary`)}catch(e){setLocalError(e.response?.data?.message||"Could not generate the summary.")}};
+ return <main className="case-taking-page"><header className="case-header"><div><span>AAROGYASAAR AI</span><h1>Patient History</h1></div><div className="case-header-actions"><button className="text-button" onClick={()=>navigate("/patient/dashboard")}><ArrowLeft size={16}/>Dashboard</button><select value={language} onChange={e=>setLanguage(e.target.value)}><option value="en-IN">English</option><option value="hi-IN">हिन्दी</option></select></div></header>
+ <section className="case-layout"><div className="conversation-card"><div className="ai-question"><div className="ai-orb"><span/></div><div><small>AAROGYASAAR AI</small><p>{question}</p><button onClick={()=>speak(question)}><Volume2 size={17}/>Listen</button></div></div><div className="conversation-history">{(currentCase?.conversation||[]).map((m,i)=><div key={i} className={`message ${m.speaker}`}><span>{m.speaker === "patient" ? "You" : "AI"}</span><p>{m.text}</p></div>)}</div><div className="response-box"><textarea value={message} onChange={e=>setMessage(e.target.value)} onKeyDown={e=>{if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();submit()}}} placeholder="Describe how you are feeling…"/><div className="response-actions"><button className={listening?"recording":""} onClick={listening?stopListening:startListening}><Mic size={20}/>{listening?"Listening…":"Speak"}</button><button onClick={submit} disabled={loading||!message.trim()}><Send size={18}/>{loading?"Sending…":"Send"}</button></div></div></div><aside className="case-intelligence"><AdaptiveQuestion question={question} extracted={currentCase?.extractedSymptoms||[]}/><CompletenessMeter value={currentCase?.completeness||0}/><RedFlagCard flags={currentCase?.redFlags||[]}/><div className="case-actions"><button className="secondary-button" onClick={()=>navigate(`/case/${caseId}/documents`)}><FileText size={17}/>Documents</button><button className="secondary-button" onClick={()=>navigate(`/case/${caseId}/timeline`)}><Clock3 size={17}/>Timeline</button><button className="hero-primary full-width" onClick={finish} disabled={loading||!(currentCase?.conversation?.some(m=>m.speaker==="patient"))}><CheckCircle2 size={17}/>Finish & Generate Summary</button></div></aside></section>{(error||localError)&&<div className="form-error case-error">{localError||error}</div>}</main>;
+}
